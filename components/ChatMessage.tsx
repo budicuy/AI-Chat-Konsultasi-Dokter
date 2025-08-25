@@ -35,42 +35,42 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
     <div className={`${wrapperClasses} animate-fade-in`}>
       <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-         <div className="flex-shrink-0 mt-1">
-            {isUser ? (
-              <div className="p-1.5 rounded-full bg-slate-800">
-                <UserIcon className="w-6 h-6 text-white" />
-              </div>
-            ) : (
-              <img src="/avatardokter.png" alt="Dokbro Avatar" className="w-10 h-10 rounded-full shadow-md" />
-            )}
-         </div>
-         <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
-            <div className={`p-4 rounded-xl ${bubbleClasses} shadow-md max-w-md md:max-w-lg`}>
-              {isUser ? (
-                <p className="whitespace-pre-wrap">{message.content}</p>
-              ) : (
-                <div className="markdown-content">
-                  {message.content ? (
-                    <Suspense fallback={<span className="inline-block w-2 h-5 bg-white/50 animate-pulse rounded-sm"></span>}>
-                      <MarkdownRenderer content={message.content} />
-                    </Suspense>
-                  ) : (
-                    <span className="inline-block w-2 h-5 bg-white/50 animate-pulse rounded-sm"></span>
-                  )}
-                </div>
-              )}
+        <div className="flex-shrink-0 mt-1">
+          {isUser ? (
+            <div className="p-1.5 rounded-full bg-slate-800">
+              <UserIcon className="w-6 h-6 text-white" />
             </div>
-            {!isUser && message.content && (
-              <button
-                  onClick={handleCopy}
-                  className="mt-2 flex items-center gap-1.5 p-1 rounded-md text-xs text-gray-500 bg-gray-100 transition-all duration-200 hover:bg-gray-200 hover:text-black focus:outline-none focus:ring-2 focus:ring-red-500"
-                  aria-label={isCopied ? 'Teks disalin!' : 'Salin teks'}
-              >
-                  {isCopied ? <CheckIcon className="w-3.5 h-3.5 text-green-600" /> : <ClipboardIcon className="w-3.5 h-3.5" />}
-                  <span className="font-medium">{isCopied ? 'Disalin!' : 'Salin'}</span>
-              </button>
+          ) : (
+            <img src="/avatardokter.png" alt="Dokbro Avatar" className="w-10 h-10 rounded-full shadow-md" />
+          )}
+        </div>
+        <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
+          <div className={`p-4 rounded-xl ${bubbleClasses} shadow-md max-w-md md:max-w-lg`}>
+            {isUser ? (
+              <p className="whitespace-pre-wrap">{message.content}</p>
+            ) : (
+              <div className="markdown-content">
+                {message.content ? (
+                  <Suspense fallback={<span className="inline-block w-2 h-5 bg-white/50 animate-pulse rounded-sm"></span>}>
+                    <MarkdownRenderer content={message.content} />
+                  </Suspense>
+                ) : (
+                  <span className="inline-block w-2 h-5 bg-white/50 animate-pulse rounded-sm"></span>
+                )}
+              </div>
             )}
-         </div>
+          </div>
+          {!isUser && message.content && (
+            <button
+              onClick={handleCopy}
+              className="mt-2 flex items-center gap-1.5 p-1 rounded-md text-xs text-gray-500 bg-gray-100 transition-all duration-200 hover:bg-gray-200 hover:text-black focus:outline-none focus:ring-2 focus:ring-red-500"
+              aria-label={isCopied ? 'Teks disalin!' : 'Salin teks'}
+            >
+              {isCopied ? <CheckIcon className="w-3.5 h-3.5 text-green-600" /> : <ClipboardIcon className="w-3.5 h-3.5" />}
+              <span className="font-medium">{isCopied ? 'Disalin!' : 'Salin'}</span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

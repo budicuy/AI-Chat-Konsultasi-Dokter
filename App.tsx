@@ -19,8 +19,8 @@ const App: React.FC = () => {
     setIsLoading(true);
 
     try {
-  const stream = await sendMessageStream(userMessage.content);
-      
+      const stream = await sendMessageStream(userMessage.content);
+
       let accumulatedText = '';
       setMessages(prev => [...prev, { role: Role.MODEL, content: accumulatedText }]);
 
