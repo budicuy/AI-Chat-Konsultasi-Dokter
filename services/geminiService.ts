@@ -3,7 +3,9 @@ import { GoogleGenAI, Chat } from "@google/genai";
 if (!process.env.API_KEY) {
   // In a real application, you'd want to handle this more gracefully.
   // For this context, we'll throw an error to make it clear the key is missing.
-  alert("API Key for Gemini is not configured. Please set the API_KEY environment variable.");
+  alert(
+    "API Key for Gemini is not configured. Please set the API_KEY environment variable."
+  );
   throw new Error("API_KEY environment variable is not set");
 }
 
@@ -55,7 +57,7 @@ Kamu adalah sebuah AI Chatbot yang berperan sebagai "Dokbro", seorang dokter mud
 
 // Using gemini-2.5-flash as it's a powerful and fast model.
 const chat: Chat = ai.chats.create({
-  model: 'gemini-2.5-flash',
+  model: "gemini-2.5-flash-lite",
   config: {
     systemInstruction: dokbroSystemInstruction,
   },
