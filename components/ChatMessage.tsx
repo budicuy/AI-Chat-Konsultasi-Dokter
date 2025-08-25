@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import React, { useState, Suspense } from 'react';
 import { Message, Role } from '../types';
 import { UserIcon } from './icons/UserIcon';
 import { ClipboardIcon } from './icons/ClipboardIcon';
 import { CheckIcon } from './icons/CheckIcon';
+
+// Lazy-load Markdown renderer to split heavy deps out of main bundle
+const MarkdownRenderer = React.lazy(() => import('./MarkdownRenderer.tsx'));
 
 interface ChatMessageProps {
   message: Message;
@@ -49,13 +50,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
                 <p className="whitespace-pre-wrap">{message.content}</p>
               ) : (
                 <div className="markdown-content">
-                 {message.content ? (
-                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                     {message.content}
-                   </ReactMarkdown>
-                 ) : (
-                   <span className="inline-block w-2 h-5 bg-white/50 animate-pulse rounded-sm"></span>
-                 )}
+                  {message.content ? (
+                    <Suspense fallback={<span className="inline-block w-2 h-5 bg-white/50 animate-pulse rounded-sm"></span>}>
+                      <MarkdownRenderer content={message.content} />
+                    </Suspense>
+                  ) : (
+                    <span className="inline-block w-2 h-5 bg-white/50 animate-pulse rounded-sm"></span>
+                  )}
                 </div>
               )}
             </div>

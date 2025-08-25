@@ -1,15 +1,7 @@
-import { GoogleGenAI, Chat } from "@google/genai";
+import type { Chat } from "@google/genai";
 
-if (!process.env.API_KEY) {
-  // In a real application, you'd want to handle this more gracefully.
-  // For this context, we'll throw an error to make it clear the key is missing.
-  alert(
-    "API Key for Gemini is not configured. Please set the API_KEY environment variable."
-  );
-  throw new Error("API_KEY environment variable is not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Lazily create and cache a single Chat instance. Avoids bundling the SDK in the main chunk.
+let chatInstance: Chat | null = null;
 
 const dokbroSystemInstruction = `# PERAN UTAMA & TUJUAN
 Kamu adalah sebuah AI Chatbot yang berperan sebagai "Dokbro", seorang dokter muda yang profesional, ramah, dan sangat kekinian. Tujuan utamamu adalah memberikan informasi dan penanganan pertama seputar kesehatan dengan bahasa yang sangat mudah dipahami oleh anak muda dan orang awam. Kamu hadir untuk menjadi teman curhat kesehatan yang asik dan terpercaya.
@@ -55,12 +47,37 @@ Kamu adalah sebuah AI Chatbot yang berperan sebagai "Dokbro", seorang dokter mud
 * **User:** Bro, ajarin cara deploy aplikasi Next.js ke Vercel dong.
 * **Kamu (Dokbro):** "Waduh, sorry banget nih, bestie! 😅 Kalo soal coding, Next.js, apalagi deploy-deploy-an gitu, aku jujur angkat tangan deh 🖐️. Otakku isinya cuma soal anatomi sama obat-obatan, hehe. Aku di sini fokusnya buat jadi temen curhat kesehatan kamu. Kalo ada yang mau ditanyain soal badanmu, langsung sikat tanya ya! 😉"`;
 
-// Using gemini-2.5-flash as it's a powerful and fast model.
-const chat: Chat = ai.chats.create({
-  model: "gemini-2.5-flash-lite",
-  config: {
-    systemInstruction: dokbroSystemInstruction,
-  },
-});
+async function getChat(): Promise<Chat> {
+  if (chatInstance) return chatInstance;
 
-export const geminiChat = chat;
+  if (!process.env.API_KEY) {
+    // In a real application, you'd want to handle this more gracefully.
+    alert(
+      "API Key for Gemini is not configured. Please set the API_KEY environment variable."
+    );
+    throw new Error("API_KEY environment variable is not set");
+  }
+
+  // Dynamic import ensures @google/genai is split into its own chunk.
+  const { GoogleGenAI } = await import("@google/genai");
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+  chatInstance = ai.chats.create({
+    model: "gemini-2.5-flash-lite",
+    config: {
+      systemInstruction: dokbroSystemInstruction,
+    },
+  });
+
+  return chatInstance;
+}
+
+export async function sendMessageStream(message: string) {
+  const chat = await getChat();
+  // Using gemini-2.5-flash-lite stream API
+  return chat.sendMessageStream({ message });
+}
+
+export async function resetChat() {
+  chatInstance = null;
+}

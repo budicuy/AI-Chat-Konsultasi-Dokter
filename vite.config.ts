@@ -12,6 +12,26 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
+      },
+      build: {
+        chunkSizeWarningLimit: 700,
+        rollupOptions: {
+          output: {
+            manualChunks: {
+              vendor: [
+                'react',
+                'react-dom'
+              ],
+              markdown: [
+                'react-markdown',
+                'remark-gfm'
+              ],
+              genai: [
+                '@google/genai'
+              ]
+            }
+          }
+        }
       }
     };
 });

@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { Message, Role } from './types';
-import { geminiChat } from './services/geminiService';
+import { sendMessageStream } from './services/geminiService';
 import MessageList from './components/MessageList';
 import ChatInput from './components/ChatInput';
 
@@ -19,7 +19,7 @@ const App: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const stream = await geminiChat.sendMessageStream({ message: userMessage.content });
+  const stream = await sendMessageStream(userMessage.content);
       
       let accumulatedText = '';
       setMessages(prev => [...prev, { role: Role.MODEL, content: accumulatedText }]);
