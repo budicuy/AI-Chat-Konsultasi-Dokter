@@ -1,0 +1,5 @@
+{
+  "name": "Gemini AI Chat",
+  "description": "An AI-powered chat application using the Gemini API to provide interactive and streaming responses to user queries in Indonesian.",
+  "requestFramePermissions": []
+}
